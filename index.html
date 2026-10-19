@@ -154,6 +154,91 @@ body.pq-signup-screen #userAuthModal #pqRememberRow,body.pq-signup-screen #userA
 html.pq-auth-requested #userAuthModal{display:flex!important;position:fixed;inset:0;z-index:1000;overflow-y:auto;align-items:center;justify-content:center;padding:18px;background:linear-gradient(145deg,#004b3c 0%,#08775c 48%,#e9f2ec 48%,#f8faf8 100%)}
 html.pq-auth-requested #userAuthModal>.modal{width:min(860px,100%);max-height:none;min-height:100vh;overflow:visible;border-radius:30px;background:#fff;box-shadow:0 24px 70px #002d2440;display:flex;flex-direction:column;align-items:stretch;padding:26px 16px 34px}
 @media(max-width:560px){html.pq-auth-requested #userAuthModal{padding:10px}html.pq-auth-requested #userAuthModal>.modal{border-radius:22px;padding:18px 10px}}
+
+/* Final reference-match layout: green branded header above a white rounded form card. */
+body.pq-auth-screen #userAuthModal.open,
+html.pq-auth-requested #userAuthModal{
+  display:flex!important;position:fixed!important;inset:0!important;z-index:1000!important;
+  overflow-y:auto!important;align-items:center!important;justify-content:flex-start!important;
+  flex-direction:column!important;padding:0!important;
+  background:
+    radial-gradient(ellipse at 15% 10%,#159675 0%,transparent 38%),
+    radial-gradient(ellipse at 95% 24%,#248b70 0%,transparent 36%),
+    linear-gradient(145deg,#004b3c 0%,#00674f 46%,#e9f0e8 46.2%,#fbfcf8 100%)!important;
+}
+body.pq-auth-screen #userAuthModal>.modal,
+html.pq-auth-requested #userAuthModal>.modal{
+  width:100%!important;max-width:none!important;min-height:100vh!important;height:auto!important;
+  max-height:none!important;overflow:visible!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;padding:26px 16px 34px!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+}
+body.pq-auth-screen #userAuthModal .pq-auth-brand,
+html.pq-auth-requested #userAuthModal .pq-auth-brand{
+  display:block!important;width:min(860px,100%)!important;flex:0 0 auto!important;
+  padding:0 12px 20px!important;margin:0 auto!important;text-align:center!important;
+  color:#fff!important;background:transparent!important;
+}
+body.pq-auth-screen #userAuthModal .pq-auth-brand .pq-auth-logo,
+html.pq-auth-requested #userAuthModal .pq-auth-brand .pq-auth-logo{
+  display:block!important;width:clamp(88px,14vw,138px)!important;height:clamp(88px,14vw,138px)!important;
+  object-fit:contain!important;margin:0 auto 10px!important;
+}
+body.pq-auth-screen #userAuthModal .pq-auth-brand h1,
+html.pq-auth-requested #userAuthModal .pq-auth-brand h1{
+  color:#fff!important;font-size:clamp(27px,5vw,42px)!important;line-height:1.08!important;
+  margin:0!important;font-weight:900!important;letter-spacing:.3px!important;
+}
+body.pq-auth-screen #userAuthModal .pq-auth-brand h1 span,
+html.pq-auth-requested #userAuthModal .pq-auth-brand h1 span{color:#f2c34e!important}
+body.pq-auth-screen #userAuthModal .pq-auth-brand p,
+html.pq-auth-requested #userAuthModal .pq-auth-brand p{
+  color:#e9f5ef!important;letter-spacing:clamp(2px,.55vw,5px)!important;
+  font-size:clamp(11px,2vw,16px)!important;margin:10px 0 0!important;
+}
+body.pq-auth-screen #userAuthModal>.modal>.modalhead,
+html.pq-auth-requested #userAuthModal>.modal>.modalhead{display:none!important}
+body.pq-auth-screen #userAuthModal .modalbody,
+html.pq-auth-requested #userAuthModal .modalbody{
+  width:min(860px,100%)!important;flex:0 0 auto!important;background:#fff!important;
+  border-radius:34px 34px 0 0!important;box-shadow:0 24px 65px #002e2445!important;
+  padding:clamp(24px,4vw,46px) clamp(20px,5.4vw,56px) 18px!important;
+  text-align:center!important;
+}
+body.pq-auth-screen #userAuthModal .modalfoot,
+html.pq-auth-requested #userAuthModal .modalfoot{
+  display:block!important;width:min(860px,100%)!important;flex:0 0 auto!important;
+  background:#fff!important;border:0!important;border-radius:0!important;
+  padding:0 clamp(20px,5.4vw,56px) 12px!important;
+}
+body.pq-auth-screen #userAuthModal #authSwitch,
+html.pq-auth-requested #userAuthModal #authSwitch{
+  width:min(860px,100%)!important;flex:0 0 auto!important;background:#fff!important;
+  margin:0!important;padding:22px 12px 22px!important;font-size:clamp(15px,2.5vw,22px)!important;
+  color:#5e6676!important;
+}
+body.pq-auth-screen #userAuthModal .pq-auth-extra,
+html.pq-auth-requested #userAuthModal .pq-auth-extra{
+  width:min(860px,100%)!important;flex:0 0 auto!important;background:#fff!important;
+  padding:0 clamp(20px,5.4vw,56px) 26px!important;border-radius:0 0 34px 34px!important;
+}
+body.pq-auth-screen #userAuthModal #userNameField label,
+body.pq-auth-screen #userAuthModal #userIdField label,
+body.pq-auth-screen #userAuthModal #signupMailField label,
+body.pq-auth-screen #userAuthModal #signupConfirmField label{font-size:15px!important}
+body.pq-auth-screen.pq-signup-screen #userAuthModal .modalbody,
+html.pq-auth-requested body.pq-signup-screen #userAuthModal .modalbody{
+  border-radius:34px 34px 0 0!important;padding-top:clamp(22px,3.4vw,34px)!important;
+}
+@media(max-width:560px){
+ body.pq-auth-screen #userAuthModal>.modal,html.pq-auth-requested #userAuthModal>.modal{padding:18px 10px 24px!important}
+ body.pq-auth-screen #userAuthModal .pq-auth-brand,html.pq-auth-requested #userAuthModal .pq-auth-brand{padding-bottom:18px!important}
+ body.pq-auth-screen #userAuthModal .modalbody,html.pq-auth-requested #userAuthModal .modalbody{padding:23px 18px 16px!important;border-radius:25px 25px 0 0!important}
+ body.pq-auth-screen #userAuthModal .modalfoot,html.pq-auth-requested #userAuthModal .modalfoot{padding:0 18px 10px!important}
+ body.pq-auth-screen #userAuthModal #authSwitch,html.pq-auth-requested #userAuthModal #authSwitch{padding:18px 8px!important}
+ body.pq-auth-screen #userAuthModal .pq-auth-extra,html.pq-auth-requested #userAuthModal .pq-auth-extra{padding:0 18px 18px!important;border-radius:0 0 25px 25px!important}
+}
+
 </style>
 <script>
 /* Early auth bootstrap: login opening must not depend on the large app initializer. */
@@ -176,6 +261,28 @@ window.pqSubmitAuth=function(mode){
   if(msg){msg.textContent='Login could not start. Please refresh the page and try again.';msg.classList.remove('hide');}
   return false;
 };
+/* Reliable delegated Login <-> Signup switch. Capture phase survives rebuilt authSwitch markup. */
+window.pqSwitchAuthMode=function(){
+  try{
+    if(typeof setAuthMode==='function'){
+      var onSignup=document.body.classList.contains('pq-signup-screen');
+      setAuthMode(onSignup?'signin':'signup');
+      var modal=document.getElementById('userAuthModal');
+      if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');}
+      document.body.classList.add('pq-auth-screen');
+      return false;
+    }
+  }catch(err){console.error('Auth mode switch failed:',err);}
+  var msg=document.getElementById('userAuthMsg');
+  if(msg){msg.textContent='Signup screen could not open. Please refresh and try again.';msg.classList.remove('hide');}
+  return false;
+};
+document.addEventListener('click',function(ev){
+  var switchLink=ev.target&&ev.target.closest?ev.target.closest('#switchSignup'):null;
+  if(!switchLink)return;
+  ev.preventDefault();ev.stopPropagation();if(ev.stopImmediatePropagation)ev.stopImmediatePropagation();
+  window.pqSwitchAuthMode();
+},true);
 if(new URLSearchParams(location.search).get('login')==='1'){
   document.documentElement.classList.add('pq-auth-requested');
   document.addEventListener('DOMContentLoaded',function(){window.pqOpenPublicAuth();});
