@@ -157,6 +157,45 @@ html.pq-auth-requested #userAuthModal>.modal{width:min(860px,100%);max-height:no
 
 
 
+
+/* Premium 3D brand tile: bright white rim, teal halo and layered inset highlights. */
+body.pq-auth-screen #userAuthModal .modal > .pq-auth-brand .pq-auth-logo,
+html.pq-auth-requested #userAuthModal .modal > .pq-auth-brand .pq-auth-logo{
+  border:3px solid rgba(239,255,249,.92)!important;
+  outline:2px solid rgba(13,190,145,.7)!important;outline-offset:3px!important;
+  box-shadow:
+    0 0 0 7px rgba(255,255,255,.08),
+    0 0 28px 9px rgba(23,231,177,.25),
+    0 18px 32px rgba(0,24,18,.48),
+    inset 0 2px 0 rgba(255,255,255,.38),
+    inset 0 -8px 16px rgba(0,18,13,.3)!important;
+  position:relative!important;
+}
+body.pq-auth-screen.pq-organization-screen #pqAuthPageTitle{color:#064c3d!important}
+body.pq-auth-screen.pq-organization-screen #pqAuthPageSubtitle{max-width:680px;margin-left:auto;margin-right:auto}
+body.pq-auth-screen.pq-organization-screen #authRoleNote{
+  display:block!important;text-align:center!important;border:1px solid #d9eee5!important;
+  background:linear-gradient(135deg,#f0fbf6,#e1f4ec)!important;color:#075744!important;
+  border-radius:14px!important;padding:13px 16px!important;font-weight:650!important;
+}
+body.pq-auth-screen.pq-organization-screen #loginMailField label{
+  color:#075744!important;font-weight:800!important
+}
+body.pq-auth-screen.pq-organization-screen #userAuthEmail{
+  background:#edf7f2!important;border-color:#b8d8ca!important;color:#184b3c!important;
+  font-weight:700!important;opacity:1!important
+}
+body.pq-auth-screen.pq-organization-screen #userSignIn{
+  background:linear-gradient(115deg,#006b50,#004735)!important;
+  border:2px solid #f1c84f!important;box-shadow:0 9px 20px #004b3830!important
+}
+body.pq-auth-screen.pq-organization-screen .pq-auth-extra{display:none!important}
+body.pq-auth-screen.pq-organization-screen #authSwitch{display:none!important}
+body.pq-auth-screen.pq-organization-screen #forgotPassword{display:none!important}
+body.pq-auth-screen.pq-organization-screen #chooseUser,
+body.pq-auth-screen.pq-organization-screen #chooseAdmin{display:none!important}
+body.pq-auth-screen.pq-organization-screen #authRoleNote{margin-top:0!important}
+
 /* Match the supplied Premium Quantify reference: emblem sits inside a green rounded tile. */
 body.pq-auth-screen #userAuthModal .modal > .pq-auth-brand,
 html.pq-auth-requested #userAuthModal .modal > .pq-auth-brand{
@@ -310,6 +349,10 @@ html.pq-auth-requested body.pq-signup-screen #userAuthModal .modalbody{
 /* Early auth bootstrap: login opening must not depend on the large app initializer. */
 window.pqOpenPublicAuth=function(event){
   if(event){event.preventDefault();event.stopPropagation();}
+  document.body.classList.remove('pq-organization-screen');
+  var emailInput=document.getElementById('userAuthEmail');
+  if(emailInput){emailInput.readOnly=false;emailInput.value='';}
+  var emailLabel=document.getElementById('loginIdLabel');if(emailLabel)emailLabel.textContent='Mail / User ID';
   /* Keep the browser Back button inside the site: auth is a history state above Home. */
   try{
     var isDirectLogin=new URLSearchParams(location.search).get('login')==='1';
@@ -344,6 +387,8 @@ window.pqSetPublicAuthMode=function(mode){
   var $id=function(id){return document.getElementById(id);};
   try{
     document.body.classList.add('pq-auth-screen');
+    document.body.classList.remove('pq-organization-screen');
+    var loginEmail=$id('userAuthEmail');if(loginEmail)loginEmail.readOnly=false;
     document.body.classList.toggle('pq-signup-screen',signup);
     var modal=$id('userAuthModal');
     if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');}
@@ -512,6 +557,7 @@ if(new URLSearchParams(location.search).get('login')==='1'){
 <script>
 const DEFAULT_URL='https://sybwiwfctvdtsvuxugvh.supabase.co';
 const DEFAULT_PRODUCT='e23660f3-cf14-4eb9-bbd8-5630de785272';
+const ORGANIZATION_EMAIL='arunkr2091@gmail.com';
 const $=id=>document.getElementById(id);
 const PUBLIC_SUPABASE_KEY='sb_publishable_QsxLqmBZtbTGEpuD9gJFLg_wEbym1zA';
 let cfg={url:DEFAULT_URL,key:PUBLIC_SUPABASE_KEY,product:DEFAULT_PRODUCT};
@@ -564,9 +610,33 @@ function pqApplyFontSize(scale){document.querySelectorAll('body *').forEach(el=>
 
 $('publicLanguage').onchange=e=>pqSetLanguage(e.target.value);
 
-let pqPublicAuth=false;function pqCloseAuth(){ $('userAuthModal').classList.remove('open');$('userAuthModal').setAttribute('aria-hidden','true');document.body.classList.remove('pq-auth-screen','pq-signup-screen');document.documentElement.classList.remove('pq-auth-requested');pqPublicAuth=false} $('userAuthClose').onclick=()=>pqCloseAuth();$('userAuthModal').onclick=e=>{if(e.target===$('userAuthModal'))pqCloseAuth()};$('pqOrgLogin').onclick=()=>{currentRole='admin';$('userAuthEmail').value='';setAuthMode('signin');$('authSwitch').classList.add('hide');$('forgotPassword').classList.add('hide');showAuthMessage('Sign in with your organization administrator account.');};
+let pqPublicAuth=false;function pqCloseAuth(){ $('userAuthModal').classList.remove('open');$('userAuthModal').setAttribute('aria-hidden','true');document.body.classList.remove('pq-auth-screen','pq-signup-screen','pq-organization-screen');document.documentElement.classList.remove('pq-auth-requested');pqPublicAuth=false;$('userAuthEmail').readOnly=false;$('userSignIn').textContent='Login';} $('userAuthClose').onclick=()=>pqCloseAuth();$('userAuthModal').onclick=e=>{if(e.target===$('userAuthModal'))pqCloseAuth()};$('pqOrgLogin').onclick=()=>{
+  currentRole='admin';pqPublicAuth=true;
+  document.body.classList.add('pq-auth-screen','pq-organization-screen');
+  document.body.classList.remove('pq-signup-screen');
+  document.documentElement.classList.remove('pq-auth-requested');
+  $('userAuthEmail').value=ORGANIZATION_EMAIL;
+  $('userAuthEmail').readOnly=true;
+  $('userAuthEmail').type='email';
+  $('userAuthEmail').placeholder='Organization email';
+  $('loginIdLabel').textContent='Organization Email';
+  $('pqAuthPageTitle').textContent='Organization Login';
+  $('pqAuthPageSubtitle').textContent='Sign in to manage user accounts, access permissions and organization settings.';
+  $('userAuthTitle').textContent='Organization Account';
+  $('authRoleNote').textContent='Authorized organization account only. User and access management opens after successful verification.';
+  $('userAuthPassword').value='';
+  $('userAuthPassword').placeholder='Enter organization password';
+  $('authSwitch').classList.add('hide');
+  $('forgotPassword').classList.add('hide');
+  $('userSignIn').textContent='Login to Organization Console';
+  $('userSignUp').classList.add('hide');
+  $('userSignIn').classList.remove('hide');
+  $('userAuthMsg').classList.add('hide');
+  $('userAuthModal').classList.add('open');
+  $('userAuthModal').setAttribute('aria-hidden','false');
+};
 function setAuthMode(mode){authMode=mode;const signup=mode==='signup';if(pqPublicAuth){document.body.classList.toggle('pq-signup-screen',signup);$('pqAuthPageTitle').textContent=signup?'Create Your Account':'Welcome Back';$('pqAuthPageSubtitle').textContent=signup?'Join Premium Quantify to access premium calculation, quote sharing and comparison.':'Login to access Premium Quantify';$('authSwitch').innerHTML=signup?'Already have an account? <button id="switchSignup" type="button" style="border:0;background:none;padding:0;color:var(--blue);font-weight:700">Login</button>':'Don’t have an account? <button id="switchSignup" type="button" style="border:0;background:none;padding:0;color:var(--blue);font-weight:700">Signup</button>';}$('authSwitch').querySelector('#switchSignup').onclick=()=>setAuthMode(signup?'signin':'signup');$('userAuthTitle').textContent=signup?'Create account':(currentRole==='admin'?'Admin Login':'User Login');$('authRoleNote').textContent=signup?'Enter your name, a unique User ID, email address and password.':'Sign in with your Mail or User ID.';$('userNameField').classList.toggle('hide',!signup);$('userIdField').classList.toggle('hide',!signup);$('signupMailField').classList.toggle('hide',!signup);$('signupConfirmField').classList.toggle('hide',!signup);$('loginMailField').classList.toggle('hide',signup);$('userAuthPassword').autocomplete=signup?'new-password':'current-password';$('userAuthPassword').placeholder=signup?'Create a password':'Enter password';$('forgotPassword').classList.toggle('hide',signup||currentRole==='admin');$('authSwitch').classList.toggle('hide',currentRole==='admin'&&!pqPublicAuth);$('userSignIn').classList.toggle('hide',signup);$('userSignUp').classList.toggle('hide',!signup);$('userSignUp').textContent='Create account';$('userAuthMsg').classList.add('hide');if(typeof pqSetLanguage==='function')pqSetLanguage(pqLanguage)};$('switchSignup').onclick=()=>setAuthMode('signup');document.querySelectorAll('[data-pq-toggle]').forEach(b=>b.onclick=()=>{const i=$(b.dataset.pqToggle);i.type=i.type==='password'?'text':'password';b.textContent=i.type==='password'?'◉':'◎';b.setAttribute('aria-label',i.type==='password'?'Show password':'Hide password')});$('chooseUser').onclick=()=>{currentRole='user';$('userAuthEmail').value='';setAuthMode('signin')};
-$('chooseAdmin').onclick=()=>{currentRole='admin';$('userAuthEmail').value='arunkr2091@gmail.com';$('loginIdLabel').textContent='Mail';$('userAuthEmail').placeholder='Admin email';setAuthMode('signin');$('authSwitch').classList.add('hide');$('forgotPassword').classList.add('hide')};
+$('chooseAdmin').onclick=()=>{currentRole='admin';$('userAuthEmail').value=ORGANIZATION_EMAIL;$('userAuthEmail').readOnly=true;$('loginIdLabel').textContent='Organization Email';$('userAuthEmail').placeholder='Organization email';setAuthMode('signin');$('authSwitch').classList.add('hide');$('forgotPassword').classList.add('hide')};
 
 function showAuthMessage(t){$('userAuthMsg').textContent=t;$('userAuthMsg').classList.remove('hide')}
 function handleRecoveryLink(){const hash=new URLSearchParams(location.hash.slice(1));if(hash.get('type')==='recovery'&&hash.get('access_token')){accessToken=hash.get('access_token');const em=hash.get('email')||new URLSearchParams(location.search).get('uid')||'';$('userAuthEmail').value=em;$('userAuthTitle').textContent='Create new password';$('authRoleNote').textContent='Set a new password for your account.';$('resetPasswordFields').classList.remove('hide');$('userAuthPassword').classList.add('hide');$('forgotPassword').classList.add('hide');$('userSignIn').classList.add('hide');$('userSignUp').classList.add('hide');showAuthMessage('Recovery link verified. Enter and confirm your new password, then Save.');history.replaceState(null,'',location.pathname+location.search)}}
