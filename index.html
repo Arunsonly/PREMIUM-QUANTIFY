@@ -909,7 +909,7 @@ async function pqLoadVehicleModels(){
  variantSel.innerHTML='<option value="">Select model first</option><option value="__other__">Other — enter manually</option>';variantSel.disabled=true;
  $('vehicleModel').value='';$('vehicleVariant').value='';
  if(!makeId||makeId==='__other__'){modelSel.disabled=makeId!=='__other__';return}
- try{const rows=await api('vehicle_variant_master?select=model_name&manufacturer_id=eq.'+encodeURIComponent(makeId)+'&order=model_name.asc');
+ try{const rows=await api('vehicle_variant_master?select=model_name&vehicle_type=eq.car&production_status=eq.continue&manufacturer_id=eq.'+encodeURIComponent(makeId)+'&order=model_name.asc');
   const names=[...new Set(rows.map(x=>x.model_name).filter(Boolean))];
   modelSel.innerHTML='<option value="">Select model</option>'+names.map(x=>'<option value="'+String(x).replace(/"/g,'&quot;')+'">'+String(x).replace(/</g,'&lt;')+'</option>').join('')+'<option value="__other__">Other — enter manually</option>';modelSel.disabled=false;
  }catch(e){toast('Models could not load. Please retry.')}
@@ -920,7 +920,7 @@ async function pqLoadVehicleVariants(){
  variantSel.innerHTML='<option value="">Select variant</option><option value="__other__">Other — enter manually</option>';variantSel.disabled=true;
  $('vehicleVariant').value='';
  if(!makeId||makeId==='__other__'||!model||model==='__other__'){variantSel.disabled=model!=='__other__';return}
- try{const rows=await api('vehicle_variant_master?select=variant_name,fuel_type,engine_cc,power_kw,production_status&manufacturer_id=eq.'+encodeURIComponent(makeId)+'&model_name=eq.'+encodeURIComponent(model)+'&order=variant_name.asc');
+ try{const rows=await api('vehicle_variant_master?select=variant_name,fuel_type,engine_cc,power_kw,production_status&vehicle_type=eq.car&production_status=eq.continue&manufacturer_id=eq.'+encodeURIComponent(makeId)+'&model_name=eq.'+encodeURIComponent(model)+'&order=variant_name.asc');
   const uniq=[];const seen=new Set();for(const x of rows){const k=x.variant_name+'|'+x.fuel_type+'|'+x.engine_cc+'|'+x.power_kw;if(!seen.has(k)){seen.add(k);uniq.push(x)}}
   variantSel.innerHTML='<option value="">Select variant</option>'+uniq.map((x,i)=>'<option value="'+i+'">'+String(x.variant_name).replace(/</g,'&lt;')+(x.production_status==='discontinued'?' (Discontinued)':'')+'</option>').join('')+'<option value="__other__">Other — enter manually</option>';variantSel.disabled=false;variantSel._pqRows=uniq;
  }catch(e){toast('Variants could not load. Please retry.')}
@@ -991,9 +991,9 @@ async function pqLoadVehicleCatalog(){
  if(pqVehicleCatalogLoaded)return;
  const [brands,variants]=await Promise.all([
   api('vehicle_manufacturer_master?select=id,brand_name,country_of_origin&order=brand_name.asc&limit=1000'),
-  api('vehicle_variant_master?select=id,manufacturer_id,model_name,variant_name,fuel_type,engine_cc,power_kw,source_status&production_status=eq.continue&order=model_name.asc&limit=1000')
+  api('vehicle_variant_master?select=id,manufacturer_id,model_name,variant_name,fuel_type,engine_cc,power_kw,source_status,vehicle_type,production_status&vehicle_type=eq.car&production_status=eq.continue&order=model_name.asc&limit=5000')
  ]);
- pqVehicleBrands=brands||[];pqVehicleVariants=variants||[];pqVehicleCatalogLoaded=true;
+ pqVehicleVariants=variants||[];pqVehicleBrands=(brands||[]).filter(b=>pqVehicleVariants.some(v=>v.manufacturer_id===b.id));pqVehicleCatalogLoaded=true;
 }
 function pqEscAttr(v){return esc(v).replace(/\\/g,'&#92;')}
 function pqWizardFuelKey(raw){const v=String(raw||'').toLowerCase();if(v.includes('electric')||v==='ev')return'electric';if(v.includes('cng'))return'cng';if(v.includes('diesel'))return'diesel';if(v.includes('hybrid')||v.includes('hev'))return'hybrid';if(v.includes('petrol'))return'petrol';return'__other__'}
