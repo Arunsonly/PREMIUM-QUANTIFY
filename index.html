@@ -612,6 +612,7 @@ $('publicLanguage').onchange=e=>pqSetLanguage(e.target.value);
 
 let pqPublicAuth=false;function pqCloseAuth(){ $('userAuthModal').classList.remove('open');$('userAuthModal').setAttribute('aria-hidden','true');document.body.classList.remove('pq-auth-screen','pq-signup-screen','pq-organization-screen');document.documentElement.classList.remove('pq-auth-requested');pqPublicAuth=false;$('userAuthEmail').readOnly=false;$('userSignIn').textContent='Login';} $('userAuthClose').onclick=()=>pqCloseAuth();$('userAuthModal').onclick=e=>{if(e.target===$('userAuthModal'))pqCloseAuth()};$('pqOrgLogin').onclick=()=>{
   currentRole='admin';pqPublicAuth=true;
+  try{setAuthMode('signin');}catch(modeErr){console.warn('Organization form setup:',modeErr);}
   document.body.classList.add('pq-auth-screen','pq-organization-screen');
   document.body.classList.remove('pq-signup-screen');
   document.documentElement.classList.remove('pq-auth-requested');
