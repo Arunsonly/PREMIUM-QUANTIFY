@@ -35,6 +35,9 @@
 .user-step{display:flex;gap:10px;margin-top:13px;align-items:flex-start}.user-step em{font-style:normal;display:grid;place-items:center;flex:0 0 29px;height:29px;border-radius:10px;background:#e7faf5;color:#127d72;font-weight:800}.user-step b{display:block;font-size:12px}.user-step span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
 body.user-mode .sidebar{display:none}body.user-mode .layout{display:block;max-width:1120px;padding:18px 22px}body.user-mode #page-dashboard,body.user-mode #page-database,body.user-mode #page-source{display:none!important}body.user-mode #page-user-home{display:block}body.user-mode #settingsBtn{display:none}
 @media(max-width:760px){.user-hero{padding:23px 19px;border-radius:21px}.user-hero h2{font-size:29px}.user-hero-actions .btn{flex:1}.user-benefits{grid-template-columns:1fr 1fr;gap:8px}.user-benefit{padding:11px}.user-benefit:last-child{display:none}.user-vehicles{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.user-vehicle{min-height:132px;padding:13px}.user-lower{grid-template-columns:1fr}body.user-mode .layout{padding:13px}body.user-mode .topbar{padding:10px 14px}body.user-mode .connection{display:none}}
+/* Legacy standalone calculator UI retired. Keep its hidden fields as the quote-wizard calculation engine. */
+#page-calculator{display:none!important}
+.navbtn[data-page="calculator"]{display:none!important}
 /* Oriental-inspired calculator experience */
 #page-calculator .pagehead{padding:24px 26px;border-radius:22px;background:linear-gradient(120deg,#102b4f 0%,#174b71 68%,#087f86 100%);color:#fff;margin-bottom:18px;box-shadow:0 16px 35px #102b3b20}
 #page-calculator .pagehead .eyebrow{color:#91f0df;font-weight:800;letter-spacing:1.3px}
@@ -620,7 +623,6 @@ if(new URLSearchParams(location.search).get('login')==='1'){
 <aside class="sidebar">
  <div class="nav-label">Workspace</div><div class="navlist">
  <button class="navbtn active" data-page="dashboard"><span class="ico">▦</span>Overview</button>
- <button class="navbtn" data-page="calculator"><span class="ico">✳</span>Premium Calculator</button>
  <button class="navbtn" data-page="database"><span class="ico">▤</span>Database Explorer <span class="navcount" id="navSections">—</span></button>
  <button class="navbtn" data-page="report"><span class="ico">▧</span>Quote & PDF</button>
  </div>
