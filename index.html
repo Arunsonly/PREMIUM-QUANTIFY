@@ -327,7 +327,6 @@ function renderReport(){const now=new Date();$('reportDate').textContent='Prepar
 $('sourceRefresh').onclick=connect;
 setConnection('idle','Sign in to load database');$('healthMessage').textContent='Sign in to load live database rates.';renderReport();$('userAuthBtn').textContent='Login / Sign up';handleRecoveryLink();
 
-<script>
 /* Independent fallback: public auth must still open even if another initializer fails. */
 (function(){
  function el(id){return document.getElementById(id)}
@@ -364,5 +363,4 @@ setConnection('idle','Sign in to load database');$('healthMessage').textContent=
  if(signUp)signUp.addEventListener('click',function(){if(typeof userAuth==='function'&&document.body.classList.contains('pq-auth-screen'))userAuth('signup')});
  const close=el('userAuthClose');if(close)close.addEventListener('click',function(){el('userAuthModal').classList.remove('open');document.body.classList.remove('pq-auth-screen','pq-signup-screen')});
 })();
-</script>
 </body></html>
