@@ -325,5 +325,43 @@ $('resultJson').onclick=()=>{if(!lastCalc){toast('Calculate first');return}const
 function renderReport(){const now=new Date();$('reportDate').textContent='Prepared on '+now.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});if(!lastCalc){$('reportMeta').innerHTML='<tr><td>Quote status</td><td>Not calculated yet</td></tr>';$('reportBreakdown').innerHTML='<tr><td colspan="2">Calculate a premium to generate the breakdown.</td></tr>';$('reportGrand').textContent='₹ —';$('reportTerm').textContent='Policy term —';return}const c=lastCalc;const names={twoWheeler:'Two-wheeler',privateCar:'Private car',twoWheelerHire:'Two-wheeler for hire',commercial:'Commercial vehicle',pccv:'Passenger carrying vehicle',misc:'Miscellaneous vehicle'};const policies={package:'Package / Comprehensive',saod:'Standalone OD',tpOnly:'Third-party only'};$('reportMeta').innerHTML=[['Vehicle',names[c.vehicle]],['Policy cover',policies[c.policy]],['Fuel',c.fuel],['Zone',c.zone],['Vehicle age',c.age+' years'],['Capacity slab',c.slab.toUpperCase()],['IDV',money(c.idv)],['Policy term',c.term],['NCB',c.ncbYears+' claim-free year(s)'],['Rate source',c.sourceVersion]].map(x=>'<tr><td style="color:var(--muted)">'+esc(x[0])+'</td><td style="font-weight:650">'+esc(x[1])+'</td></tr>').join('');const b=c.breakdown;$('reportBreakdown').innerHTML=[['Own Damage Premium',b.ownDamage],['Third-party Premium',b.thirdParty],['Compulsory PA',b.cpa],['Accessories loading',b.accessories],['NCB discount',-b.ncbAmount],['Subtotal',b.subtotal],['GST ('+c.gstRate+'%)',b.gst]].map(x=>'<tr><td>'+esc(x[0])+'</td><td style="text-align:right;font-variant-numeric:tabular-nums">'+money(x[1])+'</td></tr>').join('');$('reportGrand').textContent=money(b.total);$('reportTerm').textContent='Policy term '+c.term+' · '+(c.missing.length?'Incomplete — missing rate mapping':'Rate-based illustration');if(c.missing.length)$('reportBreakdown').innerHTML+='<tr><td colspan="2" style="color:var(--red)">Missing rates: '+esc(c.missing.join(', '))+'</td></tr>'}
 $('sourceRefresh').onclick=connect;
 setConnection('idle','Sign in to load database');$('healthMessage').textContent='Sign in to load live database rates.';renderReport();$('userAuthBtn').textContent='Login / Sign up';handleRecoveryLink();
+
+<script>
+/* Independent fallback: public auth must still open even if another initializer fails. */
+(function(){
+ function el(id){return document.getElementById(id)}
+ function openPublicAuth(mode){
+  const modal=el('userAuthModal');
+  if(!modal)return;
+  document.body.classList.add('pq-auth-screen');
+  document.body.classList.toggle('pq-signup-screen',mode==='signup');
+  modal.classList.add('open');
+  const title=el('pqAuthPageTitle'),subtitle=el('pqAuthPageSubtitle');
+  if(title)title.textContent=mode==='signup'?'Create Your Account':'Welcome Back';
+  if(subtitle)subtitle.textContent=mode==='signup'?'Join Premium Quantify to access premium calculation, quote sharing and comparison.':'Login to access Premium Quantify';
+  if(el('userNameField'))el('userNameField').classList.toggle('hide',mode!=='signup');
+  if(el('userIdField'))el('userIdField').classList.toggle('hide',mode!=='signup');
+  if(el('signupMailField'))el('signupMailField').classList.toggle('hide',mode!=='signup');
+  if(el('signupConfirmField'))el('signupConfirmField').classList.toggle('hide',mode!=='signup');
+  if(el('loginMailField'))el('loginMailField').classList.toggle('hide',mode==='signup');
+  if(el('forgotPassword'))el('forgotPassword').classList.toggle('hide',mode==='signup');
+  if(el('pqRememberRow'))el('pqRememberRow').classList.toggle('hide',mode==='signup');
+  if(el('userSignIn'))el('userSignIn').classList.toggle('hide',mode==='signup');
+  if(el('userSignUp'))el('userSignUp').classList.toggle('hide',mode!=='signup');
+  if(el('authSwitch'))el('authSwitch').innerHTML=mode==='signup'?'Already have an account? <button type="button" id="pqFallbackSwitch" style="border:0;background:none;color:#1456cf;font-weight:700">Login</button>':'Don’t have an account? <button type="button" id="pqFallbackSwitch" style="border:0;background:none;color:#1456cf;font-weight:700">Signup</button>';
+  const sw=el('pqFallbackSwitch');if(sw)sw.onclick=function(){openPublicAuth(mode==='signup'?'signin':'signup')};
+  if(el('userAuthMsg'))el('userAuthMsg').classList.add('hide');
+ }
+ document.addEventListener('click',function(e){
+  const login=e.target.closest&&e.target.closest('#publicLogin');
+  const signup=e.target.closest&&e.target.closest('#pqFallbackSwitch');
+  if(login){e.preventDefault();e.stopImmediatePropagation();openPublicAuth('signin');return}
+  if(signup){e.preventDefault();e.stopImmediatePropagation();openPublicAuth('signup');return}
+ },true);
+ const signIn=el('userSignIn'),signUp=el('userSignUp');
+ if(signIn)signIn.addEventListener('click',function(){if(typeof userAuth==='function'&&document.body.classList.contains('pq-auth-screen'))userAuth('signin')});
+ if(signUp)signUp.addEventListener('click',function(){if(typeof userAuth==='function'&&document.body.classList.contains('pq-auth-screen'))userAuth('signup')});
+ const close=el('userAuthClose');if(close)close.addEventListener('click',function(){el('userAuthModal').classList.remove('open');document.body.classList.remove('pq-auth-screen','pq-signup-screen')});
+})();
 </script>
 </body></html>
